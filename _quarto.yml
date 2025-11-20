@@ -1,0 +1,41 @@
+project:
+  type: book
+  output-dir: /home/kazuo/public_html/ENQtools #docs
+book:
+  title: "調査データ関連Tools"
+  author: "藤本一男"
+  date: "2025/11/20"
+  chapters:
+    - index.qmd
+#    - intro.qmd
+    - chap1.qmd
+    - chap2.qmd # data site
+    - chap3.qmd # 統計学教材
+#    - chap4.qmd # MCAの応用。NLP、NICT
+#    - chap5.qmd # 可視化Tools
+#    - chap6.qmd # CA/MCA関連解約
+#    - biblio.qmd
+#    - note.qmd
+#    - rireki.qmd
+#    - summary.qmd
+#    - references.qmd
+
+#bibliography: references.bib
+
+format:
+  html:
+    theme: #United #cosmo
+      light: flatly
+      dark: darkly
+    cover-image: ENQview.png #summer2025.png
+  pdf:
+    documentclass: bxjsbook
+    classoption: xelatex,ja=standard,a4paper
+    editor: visual
+    keep-tex: true
+    toc: true  # 目次を有効にする（お好みで）
+
+#prefer-html: true
+
+document:
+  toc-own-page: true  # 目次を新しいページにする（お好みで）

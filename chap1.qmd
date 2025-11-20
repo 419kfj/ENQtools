@@ -3,7 +3,7 @@
 ![](ENQview.png){fig-align="right" width="400"}
 
 
-## 419.shinyapps.io
+## 419kfj.shinyapps.io
 
 -   login <https://www.shinyapps.io/admin/#/dashboard>
 
@@ -34,4 +34,4 @@
     -   ENQview::Shiny_ca
         -   Project内のRオブジェクトを入力としてcaを行う
     -   ENQview::[LayerdMAplotfunctions.R](https://github.com/419kfj/ENQview/blob/main/R/LayerdMAplotfunctions.R "LayerdMAplotfunctions.R")
-        -   層化MAを図示する。その際、該当を１、非該当を０にrecodeされている必要がある。 -　[層化MAplot.Rmd](./docs/層化MAplot.Rmd)
+        -   層化MAを図示する。その際、該当を１、非該当を０にrecodeされている必要がある。 -　[層化MAplot.html](./docs/層化MAplot.html)
