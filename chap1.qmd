@@ -1,0 +1,37 @@
+# ENQview 関連
+
+![](ENQview.png){fig-align="right" width="400"}
+
+
+## 419.shinyapps.io
+
+-   login <https://www.shinyapps.io/admin/#/dashboard>
+
+-   ENQview_lite <https://419kfj.shinyapps.io/ENQview_lite/>
+
+    -   Package ENQviewに同梱されていた、ENQviewのWebアプリ版、ローカルに.rdaで保存されているRオブジェクトを読み込みます。
+
+-   Shiny_speMCA_lite <https://419kfj.shinyapps.io/Shiny_speMCA_lite/>
+
+    -   Package ENQviewに同梱されていた、speMCAのWebアプリ版、ローカルに.rdaで保存されているRオブジェクトを読み込みます
+
+-   convOPML <https://419kfj.shinyapps.io/convOPML/>
+
+    -   OPMLをWord（docx）に変換します。アウトライナーでOPMLをexportし、それを（階層構造付きの）Wordに変換できれば、それをPowerPointのアウトラインとして活用することが可能。macOS版のWordでは、rtfにして読み込む。
+
+-   mvrnorm <https://419kfj.shinyapps.io/mvrnorm/>
+
+    -   相関係数を指定して正規乱数を発生させます。模擬データの作成用。
+
+## package
+
+-   ENQview\
+    インストール方法などは、<https://github.com/419kfj/ENQview> を参照のこと。
+    -   ENQview::ENQview
+        -   Project内のRオブジェクトを入力として単純集計を行う
+    -   ENQview::Shiny_speMCA
+        -   Project内のRオブジェクトを入力としてspecificMCAを行う
+    -   ENQview::Shiny_ca
+        -   Project内のRオブジェクトを入力としてcaを行う
+    -   ENQview::[LayerdMAplotfunctions.R](https://github.com/419kfj/ENQview/blob/main/R/LayerdMAplotfunctions.R "LayerdMAplotfunctions.R")
+        -   層化MAを図示する。その際、該当を１、非該当を０にrecodeされている必要がある。 -　[層化MAplot.Rmd](./docs/層化MAplot.Rmd)
