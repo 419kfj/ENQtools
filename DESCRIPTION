@@ -1,6 +1,6 @@
 Package: ENQtools
 Type: Package
-Title: 調査データ分析に必要か小道具tools
+Title: 調査データ分析に必要な小道具tools
 Version: 0.1.0
 Author: kazuo fujimoto
 Maintainer: The package maintainer <kazuo.fujimoto2007@gmail.com>
