@@ -1,0 +1,29 @@
+# 統計学の教材
+
+## 中心極限定理/サイコロ実験
+
+-   <http://133.167.73.14:3838/kazuo/CentralLimitTheorm/>
+
+## 相関係数を指定したデータの生成
+
+-   mvrnorm <https://419kfj.shinyapps.io/mvrnorm/>
+
+    -   相関係数を指定して正規乱数を発生させます。模擬データの作成用。
+
+## Andcomの四重奏
+
+-   **anscombe: Anscombe's Quartet of \'Identical\' Simple Linear Regressions**
+
+    -   <https://www.rdocumentation.org/packages/datasets/versions/3.6.2/topics/anscombe>
+
+## TED eduの統計学教材
+
+### シンプソンのパラドックス
+
+-   <https://www.ted.com/talks/mark_liddell_how_statistics_can_be_misleading>
+
+### グラフで誤読
+
+-   <https://www.youtube.com/watch?v=E91bGT9BjYk>
+
+### 
