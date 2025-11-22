@@ -1,5 +1,13 @@
 # データサイト
 
+## データ変換
+
+-   Labeled SPSS（.sav）をRのdfに変換する（SSJDA/SSM、JGSS、ISSP、WVS）
+
+-   CSVとコードBookからRのdfを生成する（東大谷口研）
+
+-   CSVと調査票データ（PDF、Word、text）からRのdfを生成する
+
 ## SSJDA
 
 -   <https://csrda.iss.u-tokyo.ac.jp/infrastructure/>
