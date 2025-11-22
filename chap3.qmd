@@ -12,7 +12,7 @@
 
 ## Andcomの四重奏
 
--   **anscombe: Anscombe's Quartet of \'Identical\' Simple Linear Regressions**
+-   **anscombe: Anscombe's Quartet of 'Identical' Simple Linear Regressions**
 
     -   <https://www.rdocumentation.org/packages/datasets/versions/3.6.2/topics/anscombe>
 
