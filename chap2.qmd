@@ -2,10 +2,34 @@
 
 ## SSJDA
 
-## ISSP
+-   <https://csrda.iss.u-tokyo.ac.jp/infrastructure/>
+-   SSM調査票など
+    -   SSM2015 <https://ssjda.iss.u-tokyo.ac.jp/Direct/gaiyo.php?lang=jpn&eid=1508>
+    -   SSM2005 <https://ssjda.iss.u-tokyo.ac.jp/Direct/gaiyo.php?lang=jpn&eid=0764>
+    -   SSM1995 <https://ssjda.iss.u-tokyo.ac.jp/chosa-hyo/0763c.html>
 
-## WVS 
+## JGSS 日本版総合的社会調査
 
-## e-stat
+-   <https://jgss.daishodai.ac.jp/>
 
-## RESAS
+## 東大谷口研朝日新聞共同調査
+
+-   <https://www.masaki.j.u-tokyo.ac.jp/utas/utasindex.html>
+
+## ISSP 国際社会調査プログラム/The International Social Survey Programme
+
+-   <https://issp.org/>
+
+-   <https://www.nhk.or.jp/bunken/research/yoron/20201101_5.html>
+
+## WVS 世界価値観調査/the World Values Survey
+
+-   <https://www.worldvaluessurvey.org/wvs.jsp>
+
+## e-stat  政府統計の総合窓口
+
+-   <https://www.e-stat.go.jp/>
+
+## RESAS 地域経済分析システム
+
+-   <https://resas.go.jp/>
