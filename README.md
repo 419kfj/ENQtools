@@ -7,5 +7,5 @@ if (!require(devtools)){
     install.packages('devtools')
     library(devtools)
 }
-devtools::install_github("419kfj/ENQview", upgrade="never")
+devtools::install_github("419kfj/ENQtools", upgrade="never")
 ```
