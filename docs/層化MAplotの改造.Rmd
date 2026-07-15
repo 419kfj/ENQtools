@@ -1,0 +1,191 @@
+---
+title: "層化MAplotの改造"
+author: "kazuo.fujimoto2007@gmail.com"
+date: "2025-10-20"
+output: html_document
+---
+
+# 概要
+
+- 2025/10/20 改造のまとめを開始
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+load("data/UTAS2020_a.rda")
+names(UTAS2020_a) %>% head
+names(UTAS2020_a) %>% tail
+```
+
+
+# 実験環境
+
+- データは、UTAS2020
+- 集計対象は、変数番号は、4:10
+ [4] "Q3_1メディア（新聞）を利用しているか"                                                          
+ [5] "Q3_2メディア（テレビ）を利用しているか"                                                        
+ [6] "Q3_3メディア（ラジオ）を利用しているか"                                                        
+ [7] "Q3_4メディア（雑誌）を利用しているか"                                                          
+ [8] "Q3_5メディア（インターネットニュースサイト）を利用しているか"                                  
+ [9] "Q3_6メディア（SNS）を利用しているか"                                                           
+[10] "Q3_7その他のメディアを利用しているか" 
+
+- 層化変数は次の二つで動作を確認
+  + [51] "Q47性別"                                                                                       
+  + [52] "Q48年齢層（５歳きざみ）"   
+　
+
+```{r}
+df <- UTAS2020_a
+selected_vars <- 4:10
+#layer_val <- "Q48年齢層（５歳きざみ）"
+layer_val <- 52
+```
+
+# MA 集計表（MAtbl）を作成
+
+```{r}
+make_grouped_MA_tbl <- function(df,selected_vars,layer_val,...){
+  data_for_plot <- df
+　selected_data <- data_for_plot[, selected_vars, drop = FALSE] # 集計変数
+　layer_data <- data_for_plot[,layer_val, drop=FALSE] # 層化変数
+  gp_vari <- names(layer_data)[1] #  gp_vari <- layer_val # 層化変数
+  data_for_plot %>% group_by(!!!rlang::syms(gp_vari)) %>%
+    dplyr::summarise(度数=n(),across(all_of(selected_vars),
+                                   ~ sum(. == 1,na.rm = TRUE)/n(),
+                                   .names="_{col}")) -> MAtbl # ここで、行を選択すればいよい
+  return(MAtbl)
+}
+```
+
+```{r}
+MAtbl <- make_grouped_MA_tbl(UTAS2020_a,4:10,52)
+MAtbl
+```
+
+# MAtblをもとに、折れ線グラフを描画する
+
+```{r}
+LayeredMAplot <- function(MAtbl){ #,selected_vars,layer_val,...){
+    MAtbl %>% 
+    pivot_longer(cols = starts_with("_"), names_to = "variable", values_to = "value") %>% 
+    mutate(se = sqrt(value*(1-value)/度数),
+           ci = 1.96 * se,
+      #    sd = sd() # 標準偏差の計算がよくわからない。
+          )->　df_long 
+  pd <- position_dodge(.3)
+  gp_vari <- names(MAtbl)[1] 
+  ggplot(df_long, aes(x = !!as.name(gp_vari), y = value, shape = variable, 
+                      group = variable)) + geom_line(aes(color = variable),position = pd) -> p 
+#
+p + 
+  geom_errorbar(
+  aes(ymin = value - se, ymax = value + se),#,  color = "black"),
+  width= 1,
+  linewidth = 0.25,
+  color = "black",
+  position = pd
+) -> p
+
+p + geom_point(aes(color = variable), size = 4,position = pd)  -> p 
+p + labs(x = gp_vari, y = "割合", shape = "変数", color = "変数") -> p
+p + theme_minimal() -> p 
+p + 
+  scale_color_discrete() +
+  scale_shape_manual(values = 0:length(selected_vars)) -> p
+p + theme(legend.position = "none") -> p
+return(p)
+}
+#------------
+```
+
+
+```{r}
+p <- LayeredMAplot(MAtbl)
+p
+```
+
+
+
+
+```{r eval=FALSE}
+MA_group_tbl %>% 
+    pivot_longer(cols = starts_with("_"), names_to = "variable", values_to = "value") %>% 
+    mutate(se = sqrt(value*(1-value)/度数),
+           ci = 1.96 * se,
+      #    sd = sd() # 標準偏差の計算がよくわからない。
+          )->　df_long 
+  gp_vari <- names(MAtbl)[1]
+  ggplot(df_long, aes(x = !!as.name(gp_vari), y = value, #color = variable,
+                      shape =variable, group = variable)) +
+    geom_line(aes(color = variable)) +  # 折れ線グラフ
+    geom_point(aes(color = variable),size=4) + # ポイントを追加（必要なら）
+       labs(x = gp_vari, y = "割合", shape = "変数",color = "変数") +  # 軸ラベルと凡例の設定
+       theme_minimal() +  # 見た目をシンプルに
+       scale_color_discrete() +
+       scale_shape_manual(values = 1:(length(names(MAtbl))-2))
+
+
+```
+
+# 二つをくみあわせて実行
+
+- df、選択変数、層化変数を指定して、MAtblを生成
+- 生成されたMAtblをもとに、折れ線グラフを描画。
+
+
+```{r}
+plot_layered_MA <- function(df,selected_vars,layer_var,sel=NULL,legend_pos="right"){
+  sel_pos <- if(is.null(sel)){1:n_distinct(df[[layer_val]])}else{sel}
+  make_grouped_MA_tbl(df,selected_vars,layer_val) %>% 
+    slice(sel_pos) -> MAtbl
+  p <- MAtbl %>% 
+    LayeredMAplot() + 
+    theme(legend.position=legend_pos)
+  return(list(tbl = MAtbl, plot = p))
+}
+```
+
+```{r}
+res <- plot_layered_MA(UTAS2020_a,4:10,52,legend_pos = "none",sel=-16) 
+res$p + ggtitle(label="年齢区分ごとのメディア接触。ErrorBarは１SE")
+```
+
+```{r}
+facet_layered_MA <- function(MAtbl,sel=NULL){
+    sel_pos <- if(is.null(sel)){1:n_distinct(df[[layer_val]])}else{sel}
+    MAtbl %>% slice(sel_pos) %>% 
+    pivot_longer(cols = starts_with("_"), names_to = "variable", values_to = "value") %>% 
+    mutate(se = sqrt(value*(1-value)/度数),
+           ci = 1.96 * se,
+      #    sd = sd() # 標準偏差の計算がよくわからない。
+          )->　df_long 
+  pd <- position_dodge(.3)
+   gp_vari <- names(MAtbl)[1]
+   ggplot(df_long, aes(x = !!as.name(gp_vari), y = value, color = variable, group = variable)) +
+    geom_line() + geom_point() +
+    geom_errorbar(
+  aes(ymin = value - se, ymax = value + se),#,  color = "black"),
+  width= 1,
+  linewidth = 0.25,
+  color = "black",
+  position = pd
+) -> p
+    
+    p + facet_wrap(~ variable,ncol=3) +# scales = "free_y") + # 各変数ごとにfacetで分割
+    labs(x = "Group", y = "Value") +
+    theme_minimal() +
+    theme(legend.position = "none",axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))  # ラベルを90度回転
+}
+```
+
+```{r}
+facet_layered_MA(MAtbl,sel=1:15)
+```
+

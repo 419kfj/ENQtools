@@ -1,0 +1,229 @@
+---
+title: "層化MAplotの使い方"
+author: "kazuo.fujimoto2007@gmail.com"
+date: "2025-10-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(gt)
+library(vcd)
+library(tidyverse)
+library(ENQview)
+```
+
+
+
+# 概要
+
+本稿は、ENQviewに同梱されている同率したRfunction、plot_layered_MAで描画する方法を解説する。
+
+用意するもの
+- ENQview
+- data
+  +   MA変数（1/0でコーディング）
+  +   層化する変数
+　
+# 実行事例 
+
+- 東大谷口研と朝日新聞社の合同調査のデータ
+　csvで取得して、Rのデータセットになっている。utas2022.rda
+　
+## データの読み込み　
+
+```{r}
+load("../data/UTAS2022_a.rda")
+UTAS2020_a
+```
+
+## MA回答部分の確認 Q3_1...Q3_7
+
+```{r}
+UTAS2020_a %>% select(starts_with("Q3_")) -> MA_variable
+MA_variable
+```
+
+## 層化する変数の確認：性別、年齢
+
+- [51] "Q47性別"                                                                                       
+- [52] "Q48年齢層（５歳きざみ）"   
+
+```{r}
+UTAS2020_a %>% names
+```
+
+
+```{r}
+UTAS2020_a %>% count(Q47性別)
+```
+
+```{r}
+UTAS2020_a %>% count(`Q48年齢層（５歳きざみ）`)
+```
+
+# 層化MA
+
+```{r}
+df <- UTAS2020_a
+sel <- NULL
+layer_val <- "Q48年齢層（５歳きざみ）"
+legend_pos <- "right" #"none"
+selected_vars <- 4:10
+sel_pos <- if (is.null(sel)) {
+        1:n_distinct(df[[layer_val]])
+    }
+#ENQview::make_grouped_MA_tbl(df,selected_vars = 4:10,layer_val = layer_val) %>% slice(sel_pos) -> MAtbl
+make_grouped_MA_tbl(df,selected_vars = 4:10,layer_val = layer_val) %>% slice(sel_pos) -> MAtbl
+
+```
+
+##  まず、描画用のMAtblを生成する。
+
+```{r eval=FALSE}
+MAtbl%>% # これは、gtの実験。
+  gt() %>%
+  fmt_number(
+    columns = 3:9,  # 対象列（名前またはtidyselectで指定）
+    decimals = 2              # 小数点以下2桁に設定
+  )
+```
+
+
+```{r}
+MAtbl
+```
+
+
+# この表をもとに、折線グラフを描く
+
+```{r}
+legend_pos <- "right"
+p <- MAtbl %>% LayeredMAplot(MAtbl, layer_val) + theme(legend.position = legend_pos)
+p
+```
+
+## 描画functionは、内部で、MAtblをlong変換している。それにse、ciの列を付加する
+
+```{r}
+MA_group_tbl <- MAtbl
+MA_group_tbl %>% #select(-度数) %>% 
+  pivot_longer(cols = starts_with("ratio_"), names_to = "variable", values_to = "value") %>% 
+  mutate(se = sqrt(value*(1-value)/度数),　#２項分布のseの計算√p(1-p)
+         ci = 1.96 * se,
+      #   sd = sd() # 標準偏差の計算がよくわからない。
+         )->　df_long # 
+df_long
+```
+
+```{r fig.width=5,fig.height=5}
+pd <- position_dodge(.3)
+gp_vari <- layer_val
+ggplot(df_long, aes(x = !!as.name(gp_vari), y = value, shape = variable, 
+                      group = variable)) + geom_line(aes(color = variable),position = pd) -> p 
+
+p + geom_errorbar(
+  aes(ymin = value - se, ymax = value + se),#,  color = "black"),
+  width= 1,
+#  size = 0.25,
+  linewidth = 0.25,
+  color = "black",
+  position = pd
+) -> p
+
+p + geom_point(aes(color = variable), size = 4,position = pd)  -> p 
+p + labs(x = gp_vari, y = "割合", shape = "変数", color = "変数") -> p
+p + theme_minimal() -> p 
+p + 
+  scale_color_discrete() +
+  scale_shape_manual(values = 1:length(selected_vars)) -> p
+p + theme(legend.position = "none") -> p
+p
+```
+
+
+
+```{r eval=FALSE}
+plot_layered_MA(UTAS2020_a,selected_vars = 4:10,layer_val = "Q48年齢層（５歳きざみ）")
+```
+
+```{r}
+df <- UTAS2020_a
+selected_vars <- 4:10
+layer_var <- "Q48年齢層（５歳きざみ）"
+sel <- NULL
+legend_pos = "right"
+
+function (df, selected_vars, layer_var, sel = NULL, legend_pos = "right") 
+{
+  sel_pos <- if (is.null(sel)) {
+    1:n_distinct(df[[layer_val]])
+  }
+  else {
+    sel
+  }
+  MAtbl <- ENQview::make_grouped_MA_tbl(df, selected_vars, layer_val) %>% 
+    slice(sel_pos)
+  p <- MAtbl %>% ENQview::LayeredMAplot(selected_vars, layer_val) + 
+    theme(legend.position = legend_pos)
+  return(list(tbl = MAtbl, plot = p))
+}
+```
+
+
+```{r}
+plot_layered_facet_MA(UTAS2020_a,4:10,layer_val = "Q48年齢層（５歳きざみ）",sel = NULL)
+```
+
+```{r fig.width=5,fig.height=5}
+MA_group_tbl <- MAtbl
+selected_vars <- 4:10
+layer_val <- "Q48年齢層（５歳きざみ）"
+
+#    df_long <- MA_group_tbl %>% select(-度数) %>% pivot_longer(cols = starts_with("ratio_"), 
+#        names_to = "variable", values_to = "value")
+   MA_group_tbl %>% #select(-度数) %>% 
+  pivot_longer(cols = starts_with("ratio_"), names_to = "variable", values_to = "value") %>% 
+  mutate(se = sqrt(value*(1-value)/度数))　->　df_long
+
+    gp_vari <- layer_val
+    ggplot(df_long, aes(x = !!as.name(gp_vari), y = value, color = variable, 
+        group = variable)) + geom_line() + geom_point() -> p
+      
+    p + geom_errorbar(aes(ymin = value - se, ymax = value + se),
+                      width= 0.5,
+                      linewidth = 0.25,
+                      color = "black") -> p
+      
+      p + facet_wrap(~variable, 
+        ncol = 3) + labs(x = "Group", y = "Value") + theme_minimal() + 
+        theme(legend.position = "none", axis.text.x = element_text(angle = 90, 
+            vjust = 0.5, hjust = 1))
+
+```
+
+
+
+```{r}
+df <- UTAS2020_a
+selected_vars <- 4:10
+layer_val <- "Q48年齢層（５歳きざみ）"
+sel <- NULL
+ 
+    sel_pos <- if (is.null(sel)) {
+        1:n_distinct(df[[layer_val]])
+    } else {
+        sel
+    }
+    MAtbl <- ENQview::make_grouped_MA_tbl(df, selected_vars, 
+        layer_val) %>% slice(sel_pos)
+    p <- MAtbl %>% facet_layered_MA(selected_vars, layer_val)
+    p
+#    return(list(tbl = MAtbl, plot = p))
+
+```
+
+
