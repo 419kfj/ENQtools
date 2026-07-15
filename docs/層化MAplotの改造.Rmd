@@ -17,9 +17,10 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
-```{r}
-load("data/UTAS2020_a.rda")
-names(UTAS2020_a) %>% head
+
+```{r eval=TRUE}
+load("../data/UTAS2022_a.rda")
+names(UTAS2020_a) %>% head.  # 2022 なのに、オブジェクト名が2020になっている。
 names(UTAS2020_a) %>% tail
 ```
 
