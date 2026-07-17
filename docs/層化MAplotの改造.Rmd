@@ -1,5 +1,5 @@
 ---
-title: "層化MAplotの改造"
+title: "層化MAplotでエラーバーを追記する"
 author: "kazuo.fujimoto2007@gmail.com"
 date: "2025-10-20"
 output: html_document
@@ -7,6 +7,7 @@ output: html_document
 
 # 概要
 
+- 2026/07/17 タイトルを「改造」から「エラーバーを追記する」に変更
 - 2025/10/20 改造のまとめを開始
 
 ```{r setup, include=FALSE}
@@ -15,12 +16,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(tidyverse)
+library(showtext)
+showtext_auto(TRUE)
 ```
 
 
 ```{r eval=TRUE}
 load("../data/UTAS2022_a.rda")
-names(UTAS2020_a) %>% head.  # 2022 なのに、オブジェクト名が2020になっている。
+names(UTAS2020_a) %>% head  # 2022 なのに、オブジェクト名が2020になっている。
 names(UTAS2020_a) %>% tail
 ```
 
