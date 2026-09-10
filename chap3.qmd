@@ -10,7 +10,7 @@
 
     -   相関係数を指定して正規乱数を発生させます。模擬データの作成用。
 
-## Andcomの四重奏
+## Anscomの四重奏
 
 -   **anscombe: Anscombe's Quartet of 'Identical' Simple Linear Regressions**
 
