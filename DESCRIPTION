@@ -12,6 +12,7 @@ LazyData: true
 Imports: 
     dplyr,
     grid,
+    RColorBrewer,
     showtext,
     vcd
 RoxygenNote: 7.3.3

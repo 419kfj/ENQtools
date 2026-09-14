@@ -9,12 +9,12 @@
 #' @importFrom showtext showtext_auto
 #' @examples
 #' \dontrun{
-#' mosaic_sort(Q1_tbl_df, sort_num = 1, title = "Q1 サービスの利用頻度")
+#' q
 #' }
 #' @export
 
 
-mosaic_sort <- function(tbl,Rcol="Set2",sort_num=NULL,title="mosaic_sort",lmar=5,tmar=5,rot=c(left=0,top=0,right=0)){
+mosaic_sort <- function(tbl,Rcol="Set2", sort_num=NULL, title="mosaic_sort",lmar=5,tmar=5,rot=c(left=0,top=0,right=0)){
   # tbl=dataframe, tbl=Q1_tbl_df
   #　Rcol=色セット名
   #　sort_cat　sortするカテゴリ番号　NULLだと、sortなし sort_cat=1
@@ -24,7 +24,8 @@ mosaic_sort <- function(tbl,Rcol="Set2",sort_num=NULL,title="mosaic_sort",lmar=5
   nc <- (dim(tbl))[2]
   nr <- (dim(tbl))[1]
   # 1. 4色を取得
-  colset <- brewer.pal(4, Rcol)
+  colset <- RColorBrewer::brewer.pal(4, Rcol)
+
   # 2. 各色を「行数（32回）」ずつ繰り返した、長さ124（31×4）のベクトルを作る
   # これにより、1列目＝色1、2列目＝色2 ... と綺麗に並びます
   col_matrix <- rep(colset, each = nr)
