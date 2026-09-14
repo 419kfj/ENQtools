@@ -1,23 +1,25 @@
-#
-# mosaic sort
-#　tbl mosaic表示する表をdfで与える
-#  sort_num sortしたい列番号（sortなしのNULLがdefault）
-#　title グラフのタイトル
-#　Rcol RColorbrewerの色セット名（"Set2"がdefault）
-#  lmar 左マージン、tmar　topマージン
-# mosaic_sort(Q1_tbl_df,sort_num = 1,title = "Q1 サービスの利用頻度")
-#
-#
+#' @title mosaic with sort
+#'
+#' @param tbl mosaic表示する表をdfで与える
+#' @param sort_num sortしたい列番号（sortなしのNULLがdefault）
+#' @param title グラフのタイトル
+#' @param Rcol RColorbrewerの色セット名（"Set2"がdefault）
+#' @param lmar 左マージン
+#' @param tmar topマージン
+#' @importFrom showtext showtext_auto
+#' @examples
+#' \dontrun{
+#' mosaic_sort(Q1_tbl_df, sort_num = 1, title = "Q1 サービスの利用頻度")
+#' }
+#' @export
 
-library(vcd)
-library(grid)
-library(showtext)
-showtext_auto(TRUE)
 
 mosaic_sort <- function(tbl,Rcol="Set2",sort_num=NULL,title="mosaic_sort",lmar=5,tmar=5,rot=c(left=0,top=0,right=0)){
   # tbl=dataframe, tbl=Q1_tbl_df
   #　Rcol=色セット名
   #　sort_cat　sortするカテゴリ番号　NULLだと、sortなし sort_cat=1
+
+  showtext::showtext_auto(TRUE)
 
   nc <- (dim(tbl))[2]
   nr <- (dim(tbl))[1]

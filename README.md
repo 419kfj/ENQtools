@@ -8,4 +8,9 @@ if (!require(devtools)){
     library(devtools)
 }
 devtools::install_github("419kfj/ENQtools", upgrade="never")
+
+# or
+
+pak::pak("419kfj/ENQtools")
+
 ```

@@ -11,5 +11,7 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
     dplyr,
+    grid,
+    showtext,
     vcd
 RoxygenNote: 7.3.3
