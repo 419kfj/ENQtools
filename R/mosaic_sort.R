@@ -1,6 +1,6 @@
 #' @title mosaic with sort
 #'
-#' @param tbl mosaic表示する表をdfで与える
+#' @param tbl mosaic表示する表をdfで与える:このdfは、make_Grid_table.R で作成すること
 #' @param sort_num sortしたい列番号（sortなしのNULLがdefault）
 #' @param title グラフのタイトル
 #' @param Rcol RColorbrewerの色セット名（"Set2"がdefault）
