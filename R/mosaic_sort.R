@@ -14,7 +14,7 @@
 #' @export
 
 
-mosaic_sort <- function(tbl,Rcol="Set2", sort_num=NULL, title="mosaic_sort",lmar=5,tmar=5,rot=c(left=0,top=0,right=0)){
+mosaic_sort <- function(tbl,Rcol="Set2", sort_num=NULL, title="mosaic_sort",lmar=5,tmar=5,rot=c(left=0,top=0,right=0),N=NULL){
   # tbl=dataframe, tbl=Q1_tbl_df
   #　Rcol=色セット名
   #　sort_cat　sortするカテゴリ番号　NULLだと、sortなし sort_cat=1
@@ -48,8 +48,10 @@ mosaic_sort <- function(tbl,Rcol="Set2", sort_num=NULL, title="mosaic_sort",lmar
                                "cols" = dim_list[[2]])
   # セルに表示する割合値を計算
 
-  N <- 1200
-  prop_tbl <- 100*(tbl_sorted/N)  #その行も合計1200になっていたので、それを割合を計算し、100倍して「％」にする。
+  ifelse(is.null(N),
+         prop.tbl = NULL,# <- 1200
+         prop_tbl <- 100*(tbl_sorted/N)
+         )#その行も合計1200になっていたので、それを割合を計算し、100倍して「％」にする。
 
   #prop_tbl_1 %>% str()
 

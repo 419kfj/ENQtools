@@ -16,6 +16,8 @@ make_Grid_table <- function(df,cols_num){
   #load("R/df_all.rda")
   #cols_num <- 28:38
 
+  N <- nrow(df)
+
   selected_vars <- df[,cols_num] %>% names#input$variables
 
   # 【★超重要・一撃必殺の防弾処理】
@@ -73,5 +75,5 @@ make_Grid_table <- function(df,cols_num){
   #     margins = c(left = 12, top = 5),
   #     just_labels = c(left = "right", top = "left"))
 
-  return (final_table)
+  return (final_table,N)
 }
