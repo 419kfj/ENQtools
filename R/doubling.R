@@ -1,18 +1,20 @@
 #' @title 2重化recode
-#'  Greenacre 2017=2020のchap26、CARME2014 chap15 を参照。
+#' Greenacre 2017=2020のchap26、CARME2014 chap15 を参照。
 #'
 #' @param df dataframe
 #' @param vari doubling する変数名 ex "A"
+#' @param sel 除外する値（デフォルトはNULL）
 #' @param M 変数の数
-#' @example
+#' @examples
 #' \dontrun{
-#' R bind_cols(
-#'   doubling(dd,"A", M = 5),
-#'   doubling(dd,"B", M = 5),
-#'   doubling(dd,"C", M = 5),
-#'   doubling(dd,"D", M = 5)
+#' bind_cols(
+#'   doubling(dd, "A", M = 5),
+#'   doubling(dd, "B", M = 5),
+#'   doubling(dd, "C", M = 5),
+#'   doubling(dd, "D", M = 5)
 #' )
-#' @export　
+#' }
+#' @export
 
 doubling <- function(df,vari,sel = NULL,M){
   M <- M

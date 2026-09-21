@@ -13,6 +13,14 @@
 #' }
 #' @export
 
+# tbl <- QQ17.grd
+# N <- 　nrow(QQ17.1)
+# Rcol <- "Set2"
+# sort_num = 5
+# title="mosaic_sort"
+# lmar=5
+# tmar=5
+# rot=c(left=0,top=0,right=0)
 
 mosaic_sort <- function(tbl,Rcol="Set2", sort_num=NULL, title="mosaic_sort",lmar=5,tmar=5,rot=c(left=0,top=0,right=0),N=NULL){
   # tbl=dataframe, tbl=Q1_tbl_df
@@ -48,10 +56,17 @@ mosaic_sort <- function(tbl,Rcol="Set2", sort_num=NULL, title="mosaic_sort",lmar
                                "cols" = dim_list[[2]])
   # セルに表示する割合値を計算
 
-  ifelse(is.null(N),
-         prop.tbl = NULL,# <- 1200
-         prop_tbl <- 100*(tbl_sorted/N)
-         )#その行も合計1200になっていたので、それを割合を計算し、100倍して「％」にする。
+#  ifelse(is.null(N),
+         prop_tbl = tbl_sorted#,# N = NULL
+#         prop_tbl <- 100*(tbl_sorted/N) # N = not NULL
+#         )
+
+
+  if (is.null(N)) {
+           prop_tbl <- tbl_sorted
+  } else {
+           prop_tbl <- 100 * (tbl_sorted / N)
+  }
 
   #prop_tbl_1 %>% str()
 
@@ -61,7 +76,7 @@ mosaic_sort <- function(tbl,Rcol="Set2", sort_num=NULL, title="mosaic_sort",lmar
 
   vcd::mosaic(#as.matrix(tbl_sorted),
     tbl_sorted,
-    gp=grid::gpar(fill=col_matrix,col=0),
+    gp=grid::gpar(fill = col_matrix, col=0),
     #              rot_labels = c(left = 0, top = 45,right=0),
     rot_labels =rot,
     margins=c(left=lmar,top=tmar),
