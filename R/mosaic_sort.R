@@ -12,18 +12,9 @@
 #' @examples
 #' \dontrun{
 #' df |> make_Grid_table() -> df.grd
-#' mosaci_sort(df_grd)
+#' mosaci_sort(df.grd)
 #' }
 #' @export
-
-# tbl <- QQ17.grd
-# N <- 　nrow(QQ17.1)
-# Rcol <- "Set2"
-# sort_num = 5
-# title="mosaic_sort"
-# lmar=5
-# tmar=5
-# rot=c(left=0,top=0,right=0)
 
 mosaic_sort <- function(tbl,Rcol="Set2", sort_num=NULL, title="mosaic_sort",lmar=5,tmar=5,rot=c(left=0,top=0,right=0),N=NULL,rate=TRUE){
   # tbl=dataframe, tbl=Q1_tbl_df
@@ -42,17 +33,12 @@ mosaic_sort <- function(tbl,Rcol="Set2", sort_num=NULL, title="mosaic_sort",lmar
   col_matrix <- rep(colset, each = nr)
 
 
-  # 列変数のカテゴリ「日常的」で降順sortする
-  #tbl <- Q1_tbl_mx # 分析対象のデータをtblに格納
-  #sort_cat = NULL
-
+  # tbl(df)をsortする
   c_names <- colnames(tbl)
-  sort_idx <- c_names[sort_num] # 1 "日常的"
 
-  if(!is.null(sort_num)){
-    sort_idx <- order(tbl[, sort_idx], decreasing = TRUE) # indexの取得
-    tbl_sorted <- as.table(as.matrix(tbl[sort_idx,])) # 行をsort_idxで並べ替えて、tbl_sortedに格納
-  } else {tbl_sorted <- as.table(as.matrix(tbl))}
+  if(!is.null(sort_num)){ #sort_num が指定されてないとdefalt＝NULL
+     tbl |> dplyr::arrange(dplyr::desc(dplyr::across(all_of(sort_num)))) |> as.matrix() -> tbl_sorted
+  } else {tbl_sorted <- as.matrix(tbl)}
 
   dim_list <- dimnames(tbl_sorted)
   dimnames(tbl_sorted) <- list("rows" = dim_list[[1]],
@@ -63,15 +49,19 @@ mosaic_sort <- function(tbl,Rcol="Set2", sort_num=NULL, title="mosaic_sort",lmar
     tbl_sorted |> as.matrix() |> prop.table(margin = 1) -> ptbl
     prop_tbl <- 100*ptbl
   } else {
-    prop_tbl <- tbl_sorted
+    prop_tbl <- tbl_sorted |> as.matrix()
   }
+  dimnames(prop_tbl) <- list("rows" = dim_list[[1]],
+                             "cols" = dim_list[[2]])
 
   text_matrix <- matrix(round(as.matrix(prop_tbl), 1), nrow = nrow(prop_tbl)) # 割合表示用のmatrixを生成
   text_table <- as.table(text_matrix) # このmatrixをtableに変換し、text_tableとする。ただ、行名列名、行カテゴリ、列カテゴリがとんでる
   dimnames(text_table) <- dimnames(tbl_sorted) #もとの_sortedのdimnamesにコピー。
 
+ tbl_sorted.tbl <- as.table(tbl_sorted)
+
   vcd::mosaic(#as.matrix(tbl_sorted),
-    tbl_sorted,
+    tbl_sorted.tbl,
     gp=grid::gpar(fill = col_matrix, col=0),
     #              rot_labels = c(left = 0, top = 45,right=0),
     rot_labels =rot,
@@ -81,7 +71,5 @@ mosaic_sort <- function(tbl,Rcol="Set2", sort_num=NULL, title="mosaic_sort",lmar
     main = title,
     pop = FALSE
   )
-  labeling = vcd::labeling_cells(text = text_table,clip = FALSE)(tbl_sorted)
-
-  # mosaic_sort(Q1_tbl_df,sort_num = 1,title = "Q1 サービスの利用頻度")
+  vcd::labeling_cells(text = text_table,clip = FALSE)(tbl_sorted.tbl)
 }
