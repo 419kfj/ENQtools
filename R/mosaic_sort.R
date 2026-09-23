@@ -6,10 +6,13 @@
 #' @param Rcol RColorbrewerの色セット名（"Set2"がdefault）
 #' @param lmar 左マージン
 #' @param tmar topマージン
+#' @param rot 行、列の表示ラベルの回転 rot=c(left=0,top=0,right=0)
+#' @param rate TRUE：mosaicのセルに行比率を表示する。 FALSE:度数をそのまま表示
 #' @importFrom showtext showtext_auto
 #' @examples
 #' \dontrun{
-#' q
+#' df |> make_Grid_table() -> df.grd
+#' mosaci_sort(df_grd)
 #' }
 #' @export
 
@@ -22,7 +25,7 @@
 # tmar=5
 # rot=c(left=0,top=0,right=0)
 
-mosaic_sort <- function(tbl,Rcol="Set2", sort_num=NULL, title="mosaic_sort",lmar=5,tmar=5,rot=c(left=0,top=0,right=0),N=NULL){
+mosaic_sort <- function(tbl,Rcol="Set2", sort_num=NULL, title="mosaic_sort",lmar=5,tmar=5,rot=c(left=0,top=0,right=0),N=NULL,rate=TRUE){
   # tbl=dataframe, tbl=Q1_tbl_df
   #　Rcol=色セット名
   #　sort_cat　sortするカテゴリ番号　NULLだと、sortなし sort_cat=1
@@ -32,7 +35,7 @@ mosaic_sort <- function(tbl,Rcol="Set2", sort_num=NULL, title="mosaic_sort",lmar
   nc <- (dim(tbl))[2]
   nr <- (dim(tbl))[1]
   # 1. 4色を取得
-  colset <- RColorBrewer::brewer.pal(4, Rcol)
+  colset <- RColorBrewer::brewer.pal(nc, Rcol)
 
   # 2. 各色を「行数（32回）」ずつ繰り返した、長さ124（31×4）のベクトルを作る
   # これにより、1列目＝色1、2列目＝色2 ... と綺麗に並びます
@@ -56,19 +59,12 @@ mosaic_sort <- function(tbl,Rcol="Set2", sort_num=NULL, title="mosaic_sort",lmar
                                "cols" = dim_list[[2]])
   # セルに表示する割合値を計算
 
-#  ifelse(is.null(N),
-         prop_tbl = tbl_sorted#,# N = NULL
-#         prop_tbl <- 100*(tbl_sorted/N) # N = not NULL
-#         )
-
-
-  if (is.null(N)) {
-           prop_tbl <- tbl_sorted
+  if (rate) {
+    tbl_sorted |> as.matrix() |> prop.table(margin = 1) -> ptbl
+    prop_tbl <- 100*ptbl
   } else {
-           prop_tbl <- 100 * (tbl_sorted / N)
+    prop_tbl <- tbl_sorted
   }
-
-  #prop_tbl_1 %>% str()
 
   text_matrix <- matrix(round(as.matrix(prop_tbl), 1), nrow = nrow(prop_tbl)) # 割合表示用のmatrixを生成
   text_table <- as.table(text_matrix) # このmatrixをtableに変換し、text_tableとする。ただ、行名列名、行カテゴリ、列カテゴリがとんでる
