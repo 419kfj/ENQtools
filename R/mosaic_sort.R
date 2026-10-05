@@ -25,8 +25,8 @@
 #' @export
 
 mosaic_sort <- function (tbl, Rcol = "Set2", sort_num = NULL, title = "mosaic_sort",
-          lmar = 5, tmar = 5, rot = c(left = 0, top = 0, right = 0),
-          N = NULL, rate = TRUE, ...)
+                          lmar = 5, tmar = 5, rot = c(left = 0, top = 0, right = 0),
+                          N = NULL, rate = TRUE, ...)
 {
   showtext::showtext_auto(TRUE)
   nc <- (dim(tbl))[2]
@@ -56,8 +56,7 @@ mosaic_sort <- function (tbl, Rcol = "Set2", sort_num = NULL, title = "mosaic_so
   dimnames(text_table) <- dimnames(tbl_sorted)
   vcd::mosaic(tbl_sorted, gp = grid::gpar(fill = col_matrix,
                                           col = 0), rot_labels = rot, margins = c(left = lmar,
-                                                                                  top = tmar),
-              just_labels = c(left = "right", top = "left"),
+                                                                                  top = tmar), just_labels = c(left = "right", top = "left"),
               keep_aspect_ratio = FALSE, main = title, pop = FALSE,...)
   labeling = (vcd::labeling_cells(text = text_table, clip = FALSE))(tbl_sorted)
 }
